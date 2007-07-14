@@ -11,7 +11,7 @@
 %define libname_gui %mklibname beidgui 1
 %define libname_jni %mklibname beidlibjni 2
 %define libname_pcsclite %mklibname beidpcsclite 2
-%define libname_pkcs11 %mklibname beidpkcs11 2
+%define libname_pkcs11 %mklibname beidpkcs11_ 2
 
 Name: %{name}
 Summary: Application to read information from the Belgian e-ID card
@@ -37,6 +37,7 @@ BuildRequires: java-sdk
 BuildRequires: openssl-devel
 BuildRequires: desktop-file-utils
 Requires: pcsc-lite
+Requires: %libname_pkcs11 = %{version}-%{release}
 
 %description
 This application allows the user to read out any information from a
@@ -61,7 +62,7 @@ This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{develname}
-Summary: Development library for %{name}.
+Summary: Development library for %{name}
 Group: Development/C
 Requires: %{libname} = %{version}-%{release}
 Provides: %{name}-devel = %{version}-%{release}
@@ -69,7 +70,7 @@ Provides: %{name}-devel = %{version}-%{release}
 %description -n %{develname}
 This package contains the header files, development
 documentation for %{name}. If you want to develop programs using 
-%{name}, you will need to install %{libnamedev}.
+%{name}, you will need to install %{develname}.
 
 %package -n %{libname_opensc}
 Group:          System/Libraries
@@ -121,7 +122,7 @@ Identity Card runtime and tools.
 
 %package -n %{libname_pkcs11}
 Group:          System/Libraries
-Summary:        pcsclite shared library for beid
+Summary:        pkcs11 shared library for beid
 
 %description -n %{libname_pkcs11}
 This package provides shared libraries to use with the Belgian
@@ -189,8 +190,9 @@ mv -vf %{buildroot}%{_bindir}/beidgui.desktop %{buildroot}%{_datadir}/applicatio
 
 desktop-file-install --vendor="" \
   --remove-category="Application" \
-  --add-category="Qt" \
+  --add-category="GTK" \
   --add-category="Utility" \
+  --add-category="System" \
   --add-category="Security" \
   --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
 
