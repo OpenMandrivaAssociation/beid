@@ -1,5 +1,5 @@
 %define real_name Belgian_Identity_Card_Run-time
-%define release %mkrel 1
+%define release %mkrel 2
 %define name	beid
 %define version 2.5.9
 %define	major	2
@@ -25,6 +25,8 @@ Source1: beid-scripts.tar.gz
 Patch0: eid-belgium-2.5.9-openscreader.patch
 Patch1: eid-belgium-2.5.9-reader-pcsc.patch
 Patch2: beid-2.5.9-SConstruct.patch
+# From Debian, fixes crash on x86_64 - AdamW 2007/07
+Patch3:	beid-2.5.9-x86_64_includes.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 #Scons doesn't build when eid-belgium is already installed
@@ -135,31 +137,32 @@ Identity Card runtime and tools.
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
+%patch3 -p1 -b .x86_64_includes
 
 ### Fixing the references to /usr/local in some files
-%{__perl} -pi.orig -e 's|/usr/local/etc\b|%{buildroot}%{_sysconfdir}|g' \
+%{__perl} -pi -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
 	SConstruct
-%{__perl} -pi.orig -e 's|/usr/local/lib\b|%{buildroot}%{_libdir}|g' \
+%{__perl} -pi -e 's,/usr/local/lib\b,%{buildroot}%{_libdir},g' \
 	src/newpkcs11/SConscript
-%{__perl} -pi.orig -e 's|/etc/init.d\b|%{buildroot}%{_initrddir}|g' \
+%{__perl} -pi -e 's,/etc/init.d\b,%{buildroot}%{_initrddir},g' \
 	src/beidservicecrl/SConscript \
 	"src/Belpic PCSC Service/SConscript"
 
-%{__perl} -pi.orig -e 's|/usr/local/etc\b|%{_sysconfdir}|g' \
+%{__perl} -pi -e 's,/usr/local/etc\b,%{_sysconfdir},g' \
 	src/beidcommon/config.cpp \
 	src/newpkcs11/config.h
-%{__perl} -pi.orig -e 's|/usr/local/lib/libbeidpkcs11.so\b|%{_libdir}/libbeidpkcs11.so.2|g' \
+%{__perl} -pi -e 's,/usr/local/lib/libbeidpkcs11.so\b,%{_libdir}/libbeidpkcs11.so.2,g' \
 	src/newpkcs11/etc/Belgian_eID_PKCS11_java.cfg \
 	src/newpkcs11/etc/beid-pkcs11-register.html
-%{__perl} -pi.orig -e 's|/usr/local/bin/beidgui.png\b|beidgui|g' \
+%{__perl} -pi -e 's,/usr/local/bin/beidgui.png\b,beidgui,g' \
 	src/eidviewer/beidgui.desktop
-%{__perl} -pi.orig -e 's|/usr/local/bin\b|%{_bindir}|g' \
+%{__perl} -pi -e 's,/usr/local/bin\b,%{_bindir},g' \
 	src/beidservicecrl/belgium.be-beidcrld \
 	"src/Belpic PCSC Service/belgium.be-beidpcscd" \
 	src/eidviewer/beidgui.desktop
-%{__perl} -pi.orig -e 's|/usr/local/share\b|%{_datadir}|g' \
+%{__perl} -pi -e 's,/usr/local/share\b,%{_datadir},g' \
 	src/eidviewer/beidgui.conf
-%{__perl} -pi.orig -e 's|MultipleArgs=false||g' \
+%{__perl} -pi -e 's,MultipleArgs=false,,g' \
 	src/eidviewer/beidgui.desktop
 
 %build
@@ -195,6 +198,10 @@ desktop-file-install --vendor="" \
   --add-category="System" \
   --add-category="Security" \
   --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
+
+%{__perl} -pi -e 's,Reading and Administration,Belgian eID card,g' %{buildroot}%{_datadir}/applications/*
+%{__perl} -pi -e 's,Lezen en Beheren,Belgische kaart eID,g' %{buildroot}%{_datadir}/applications/*
+%{__perl} -pi -e 's,Lire et Gérer,Carte eID Belge,g' %{buildroot}%{_datadir}/applications/*
 
 ### Fix library symlinks
 #for lib in $(ls %{buildroot}%{_libdir}/libbeid*.so.?.?.?); do
