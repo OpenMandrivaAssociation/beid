@@ -1,5 +1,5 @@
 %define real_name Belgian_Identity_Card_Run-time
-%define release %mkrel 2
+%define release %mkrel 3
 %define name	beid
 %define version 2.5.9
 %define	major	2
@@ -27,6 +27,8 @@ Patch1: eid-belgium-2.5.9-reader-pcsc.patch
 Patch2: beid-2.5.9-SConstruct.patch
 # From Debian, fixes crash on x86_64 - AdamW 2007/07
 Patch3:	beid-2.5.9-x86_64_includes.patch
+# From Frederik Himpe, fixes calls to unversioned .so files - AdamW 2007/07
+Patch4:	beid-2.5.9-fix-so-filenames.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 #Scons doesn't build when eid-belgium is already installed
@@ -77,6 +79,7 @@ documentation for %{name}. If you want to develop programs using
 %package -n %{libname_opensc}
 Group:          System/Libraries
 Summary:        OpenSC shared library for beid
+Requires:	%libname_gui = %{version}-%{release}
 
 %description -n %{libname_opensc}
 This package provides shared libraries to use with the Belgian
@@ -138,6 +141,7 @@ Identity Card runtime and tools.
 %patch1 -p0
 %patch2 -p0
 %patch3 -p1 -b .x86_64_includes
+%patch4 -p1 -b .sonames
 
 ### Fixing the references to /usr/local in some files
 %{__perl} -pi -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
@@ -199,9 +203,9 @@ desktop-file-install --vendor="" \
   --add-category="Security" \
   --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
 
-%{__perl} -pi -e 's,Reading and Administration,Belgian eID card,g' %{buildroot}%{_datadir}/applications/*
-%{__perl} -pi -e 's,Lezen en Beheren,Belgische kaart eID,g' %{buildroot}%{_datadir}/applications/*
-%{__perl} -pi -e 's,Lire et Gérer,Carte eID Belge,g' %{buildroot}%{_datadir}/applications/*
+%{__perl} -pi -e 's,Reading and Administration,Belgian eID card viewer,g' %{buildroot}%{_datadir}/applications/*
+%{__perl} -pi -e 's,Lezen en Beheren,Belgische eID kaartlezer,g' %{buildroot}%{_datadir}/applications/*
+%{__perl} -pi -e 's,Lire et Gérer,Lecteur de carte eID belge,g' %{buildroot}%{_datadir}/applications/*
 
 ### Fix library symlinks
 #for lib in $(ls %{buildroot}%{_libdir}/libbeid*.so.?.?.?); do
