@@ -1,5 +1,5 @@
 %define real_name Belgian_Identity_Card_Run-time
-%define release %mkrel 3
+%define release %mkrel 4
 %define name	beid
 %define version 2.5.9
 %define	major	2
@@ -27,8 +27,6 @@ Patch1: eid-belgium-2.5.9-reader-pcsc.patch
 Patch2: beid-2.5.9-SConstruct.patch
 # From Debian, fixes crash on x86_64 - AdamW 2007/07
 Patch3:	beid-2.5.9-x86_64_includes.patch
-# From Frederik Himpe, fixes calls to unversioned .so files - AdamW 2007/07
-Patch4:	beid-2.5.9-fix-so-filenames.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 #Scons doesn't build when eid-belgium is already installed
@@ -141,7 +139,6 @@ Identity Card runtime and tools.
 %patch1 -p0
 %patch2 -p0
 %patch3 -p1 -b .x86_64_includes
-%patch4 -p1 -b .sonames
 
 ### Fixing the references to /usr/local in some files
 %{__perl} -pi -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
@@ -275,37 +272,36 @@ done
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/*beid.so.*
+%{_libdir}/*beid.so*
 
 %files -n %{develname}
 %defattr(-,root,root)
-%{_libdir}/*.so
 %{_includedir}/%{name}
 
 %files -n %{libname_opensc}
 %defattr(-,root,root)
-%{_libdir}/*beidlibopensc.so.*
+%{_libdir}/*beidlibopensc.so*
 
 %files -n %{libname_comm}
 %defattr(-,root,root)
-%{_libdir}/*beidcomm.so.*
+%{_libdir}/*beidcomm.so*
 
 %files -n %{libname_common}
 %defattr(-,root,root)
-%{_libdir}/*beidcommon.so.*
+%{_libdir}/*beidcommon.so*
 
 %files -n %{libname_gui}
 %defattr(-,root,root)
-%{_libdir}/*beidgui.so.*
+%{_libdir}/*beidgui.so*
 
 %files -n %{libname_jni}
 %defattr(-,root,root)
-%{_libdir}/*beidlibjni.so.*
+%{_libdir}/*beidlibjni.so*
 
 %files -n %{libname_pcsclite}
 %defattr(-,root,root)
-%{_libdir}/*beidpcsclite.so.*
+%{_libdir}/*beidpcsclite.so*
 
 %files -n %{libname_pkcs11}
 %defattr(-,root,root)
-%{_libdir}/*beidpkcs11.so.*
+%{_libdir}/*beidpkcs11.so*
