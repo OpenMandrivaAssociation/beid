@@ -1,5 +1,5 @@
 %define real_name Belgian_Identity_Card_Run-time
-%define release %mkrel 4
+%define release %mkrel 5
 %define name	beid
 %define version 2.5.9
 %define	major	2
@@ -39,6 +39,7 @@ BuildRequires: java-sdk
 BuildRequires: openssl-devel
 BuildRequires: desktop-file-utils
 Requires: pcsc-lite
+Requires: pcsc-lite-devel
 Requires: %libname_pkcs11 = %{version}-%{release}
 
 %description
