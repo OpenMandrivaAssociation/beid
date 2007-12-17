@@ -27,7 +27,6 @@ Patch1: eid-belgium-2.5.9-reader-pcsc.patch
 Patch2: beid-2.5.9-SConstruct.patch
 # From Debian, fixes crash on x86_64 - AdamW 2007/07
 Patch3:	beid-2.5.9-x86_64_includes.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts: beid
