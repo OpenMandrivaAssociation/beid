@@ -1,5 +1,5 @@
 %define real_name Belgian_Identity_Card_Run-time
-%define release %mkrel 5
+%define release %mkrel 6
 %define name	beid
 %define version 2.5.9
 %define	major	2
