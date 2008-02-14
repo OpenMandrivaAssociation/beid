@@ -118,7 +118,7 @@ Identity Card runtime and tools.
 
 %package -n %{libname_pcsclite}
 Group:          System/Libraries
-Summary:        pcsclite shared library for beid
+Summary:        Pcsclite shared library for beid
 
 %description -n %{libname_pcsclite}
 This package provides shared libraries to use with the Belgian
@@ -126,7 +126,7 @@ Identity Card runtime and tools.
 
 %package -n %{libname_pkcs11}
 Group:          System/Libraries
-Summary:        pkcs11 shared library for beid
+Summary:        Pkcs11 shared library for beid
 
 %description -n %{libname_pkcs11}
 This package provides shared libraries to use with the Belgian
