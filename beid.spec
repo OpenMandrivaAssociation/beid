@@ -226,8 +226,7 @@ done
 %update_menus
 %update_icon_cache hicolor
 
-%post -n %{libname}
-/sbin/ldconfig
+%post -n %{libname} -p /sbin/ldconfig
 
 %preun
 %_preun_service beidcrld
@@ -238,8 +237,7 @@ done
 %clean_menus
 %clean_icon_cache hicolor
 
-%postun -n %{libname}
-/sbin/ldconfig
+%postun -n %{libname} -p /sbin/ldconfig
 
 %clean
 %{__rm} -rf %{buildroot}
