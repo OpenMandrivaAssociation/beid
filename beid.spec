@@ -226,7 +226,9 @@ done
 %update_menus
 %update_icon_cache hicolor
 
+%if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
+%endif
 
 %preun
 %_preun_service beidcrld
@@ -237,7 +239,9 @@ done
 %clean_menus
 %clean_icon_cache hicolor
 
+%if %mdkversion < 200900
 %postun -n %{libname} -p /sbin/ldconfig
+%endif
 
 %clean
 %{__rm} -rf %{buildroot}
