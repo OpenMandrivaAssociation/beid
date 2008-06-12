@@ -223,8 +223,10 @@ done
 /sbin/service pcscd condrestart > /dev/null 2>/dev/null || :
 %_post_service beidcrld
 %_post_service beidpcscd
+%if %mdkversion < 200900
 %update_menus
 %update_icon_cache hicolor
+%endif
 
 %if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
@@ -236,8 +238,10 @@ done
 
 %postun
 /sbin/service pcscd condrestart > /dev/null 2>/dev/null || :
+%if %mdkversion < 200900
 %clean_menus
 %clean_icon_cache hicolor
+%endif
 
 %if %mdkversion < 200900
 %postun -n %{libname} -p /sbin/ldconfig
