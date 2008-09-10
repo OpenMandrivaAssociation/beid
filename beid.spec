@@ -34,6 +34,10 @@ Patch3:		beid-2.6.0-gcc43.patch
 # (traitor!) - opens pscslite.so.1 rather than pcsclite.so so we don't
 # have to depend on the -devel package - AdamW 2008/09
 Patch4:		beid-2.6.0-pcsc_soname.patch
+# Remove a bunch of install directives from generic.py, which just
+# seem to conflict with ones in SConscript files and break the install
+# process - AdamW 2008/09
+Patch5:		beid-2.6.0-install.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
@@ -148,6 +152,7 @@ Identity Card runtime and tools.
 %patch2 -p1 -b .x86_64_includes
 %patch3 -p1 -b .gcc43
 %patch4 -p1 -b .pcsc
+%patch5 -p1 -b .install
 
 ### Fixing the references to /usr/local in some files
 sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
