@@ -184,7 +184,7 @@ sed -i -e 's,MultipleArgs=false,,g' \
 export JAVA_HOME="$(readlink /etc/alternatives/java_sdk)"
 #source "/etc/profile.d/qt.sh"
 %configure_scons
-%scons
+scons
 
 %install
 rm -rf %{buildroot}
