@@ -1,46 +1,53 @@
-%define real_name Belgian_Identity_Card_Run-time
-%define release %mkrel 6
-%define name	beid
-%define version 2.5.9
-%define	major	2
-%define libname %mklibname %name %major
-%define develname %mklibname %name -d
-%define libname_opensc %mklibname beidlibopensc 2
-%define libname_comm %mklibname beidcomm 0
-%define libname_common %mklibname beidcommon 0
-%define libname_gui %mklibname beidgui 1
-%define libname_jni %mklibname beidlibjni 2
-%define libname_pcsclite %mklibname beidpcsclite 2
-%define libname_pkcs11 %mklibname beidpkcs11_ 2
+%define	major		2
+%define libname		%mklibname %{name} %{major}
+%define develname	%mklibname %{name} -d
 
-Name: %{name}
-Summary: Application to read information from the Belgian e-ID card
-Version: %{version}
-Release: %{release}
-License: GPL
-Group: Communications
-URL: http://eid.belgium.be/
-Source: http://www.belgium.be/zip/Belgian_Identity_Card_Run-time%{version}.tar.bz2
-Source1: beid-scripts.tar.gz
-Patch0: eid-belgium-2.5.9-openscreader.patch
-Patch1: eid-belgium-2.5.9-reader-pcsc.patch
-Patch2: beid-2.5.9-SConstruct.patch
+%define libname_opensc		%mklibname beidlibopensc 2
+%define libname_comm		%mklibname beidcomm 0
+%define libname_common		%mklibname beidcommon 0
+%define libname_gui		%mklibname beidgui 1
+%define libname_jni		%mklibname beidlibjni 2
+%define libname_pcsclite	%mklibname beidpcsclite 2
+%define libname_pkcs11		%mklibname beidpkcs11_ 2
+
+Name:		beid
+Summary:	Application to read information from the Belgian e-ID card
+Version:	2.6.0
+Release:	%{mkrel 1}
+# The original parts are under the "eID Toolkit Software License",
+# which by my reading is BSD-like; it's basically the BSD in stronger
+# legal language with some added gumph about liability etc. It also
+# contains bits of OpenSC (which is LGPLv2+) and OpenSSL (which is
+# BSD). - AdamW 2008/09
+License:	BSD-like and BSD and LGPLv2+
+Group:		Communications
+URL:		http://eid.belgium.be/
+Source0:	http://eid.belgium.be/nl/binaries/%{name}-%{version}-20070222_tcm147-9848.tgz
+Source1:	beid-scripts.tar.gz
+Patch0:		eid-belgium-2.5.9-reader-pcsc.patch
+Patch1:		beid-2.5.9-SConstruct.patch
 # From Debian, fixes crash on x86_64 - AdamW 2007/07
-Patch3:	beid-2.5.9-x86_64_includes.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-
+Patch2:		beid-2.5.9-x86_64_includes.patch
+# From Debian, fixes build with GCC 4.3 - AdamW 2008/09
+Patch3:		beid-2.6.0-gcc43.patch
+# From Frederik Himpe, apparently, but showed up in Debian first
+# (traitor!) - opens pscslite.so.1 rather than pcsclite.so so we don't
+# have to depend on the -devel package - AdamW 2008/09
+Patch4:		beid-2.6.0-pcsc_soname.patch
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
-BuildConflicts: beid
-BuildRequires: scons, openssl-devel >= 0.9.7, pcsc-lite-devel >= 1.2.9
-BuildRequires: qt3-devel >= 3.3.3
-BuildRequires: wxGTK2.6-devel
-BuildRequires: ImageMagick
-BuildRequires: java-sdk
-BuildRequires: openssl-devel
-BuildRequires: desktop-file-utils
-Requires: pcsc-lite
-Requires: pcsc-lite-devel
-Requires: %libname_pkcs11 = %{version}-%{release}
+BuildConflicts:	beid
+BuildRequires:	scons
+BuildRequires:	openssl-devel >= 0.9.7
+BuildRequires:	pcsc-lite-devel >= 1.2.9
+BuildRequires:	qt3-devel >= 3.3.3
+BuildRequires:	wxGTK2.6-devel
+BuildRequires:	ImageMagick
+BuildRequires:	java-sdk
+BuildRequires:	openssl-devel
+BuildRequires:	desktop-file-utils
+Requires:	pcsc-lite
+Requires:	%{libname_pkcs11} = %{version}-%{release}
 
 %description
 This application allows the user to read out any information from a
@@ -57,18 +64,18 @@ Revocation List (CRL) and/or by using the Online Certificate Status
 Protocol (OCSP) against the government's servers.
 
 %package -n %{libname}
-Group:          System/Libraries
-Summary:        Main shared library for beid
+Group:		System/Libraries
+Summary:	Main shared library for beid
 
 %description -n %{libname}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{develname}
-Summary: Development library for %{name}
-Group: Development/C
-Requires: %{libname} = %{version}-%{release}
-Provides: %{name}-devel = %{version}-%{release}
+Summary:	Development library for %{name}
+Group:		Development/C
+Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
 
 %description -n %{develname}
 This package contains the header files, development
@@ -76,57 +83,57 @@ documentation for %{name}. If you want to develop programs using
 %{name}, you will need to install %{develname}.
 
 %package -n %{libname_opensc}
-Group:          System/Libraries
-Summary:        OpenSC shared library for beid
-Requires:	%libname_gui = %{version}-%{release}
+Group:		System/Libraries
+Summary:	OpenSC shared library for beid
+Requires:	%{libname_gui} = %{version}-%{release}
 
 %description -n %{libname_opensc}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{libname_comm}
-Group:          System/Libraries
-Summary:        Comm shared library for beid
+Group:		System/Libraries
+Summary:	Comm shared library for beid
 
 %description -n %{libname_comm}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{libname_common}
-Group:          System/Libraries
-Summary:        Comm shared library for beid
+Group:		System/Libraries
+Summary:	Comm shared library for beid
 
 %description -n %{libname_common}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{libname_gui}
-Group:          System/Libraries
-Summary:        GUI shared library for beid
+Group:		System/Libraries
+Summary:	GUI shared library for beid
 
 %description -n %{libname_gui}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{libname_jni}
-Group:          System/Libraries
-Summary:        JNI shared library for beid
+Group:		System/Libraries
+Summary:	JNI shared library for beid
 
 %description -n %{libname_jni}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{libname_pcsclite}
-Group:          System/Libraries
-Summary:        Pcsclite shared library for beid
+Group:		System/Libraries
+Summary:	Pcsclite shared library for beid
 
 %description -n %{libname_pcsclite}
 This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %package -n %{libname_pkcs11}
-Group:          System/Libraries
-Summary:        Pkcs11 shared library for beid
+Group:		System/Libraries
+Summary:	Pkcs11 shared library for beid
 
 %description -n %{libname_pkcs11}
 This package provides shared libraries to use with the Belgian
@@ -138,45 +145,45 @@ Identity Card runtime and tools.
 
 %patch0 -p0
 %patch1 -p0
-%patch2 -p0
-%patch3 -p1 -b .x86_64_includes
+%patch2 -p1 -b .x86_64_includes
+%patch3 -p1 -b .gcc43
+%patch4 -p1 -b .pcsc
 
 ### Fixing the references to /usr/local in some files
-%{__perl} -pi -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
+sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
 	SConstruct
-%{__perl} -pi -e 's,/usr/local/lib\b,%{buildroot}%{_libdir},g' \
+sed -i -e 's,/usr/local/lib\b,%{buildroot}%{_libdir},g' \
 	src/newpkcs11/SConscript
-%{__perl} -pi -e 's,/etc/init.d\b,%{buildroot}%{_initrddir},g' \
+sed -i -e 's,/etc/init.d\b,%{buildroot}%{_initrddir},g' \
 	src/beidservicecrl/SConscript \
 	"src/Belpic PCSC Service/SConscript"
 
-%{__perl} -pi -e 's,/usr/local/etc\b,%{_sysconfdir},g' \
+sed -i -e 's,/usr/local/etc\b,%{_sysconfdir},g' \
 	src/beidcommon/config.cpp \
 	src/newpkcs11/config.h
-%{__perl} -pi -e 's,/usr/local/lib/libbeidpkcs11.so\b,%{_libdir}/libbeidpkcs11.so.2,g' \
+sed -i -e 's,/usr/local/lib/libbeidpkcs11.so\b,%{_libdir}/libbeidpkcs11.so.2,g' \
 	src/newpkcs11/etc/Belgian_eID_PKCS11_java.cfg \
 	src/newpkcs11/etc/beid-pkcs11-register.html
-%{__perl} -pi -e 's,/usr/local/bin/beidgui.png\b,beidgui,g' \
+sed -i -e 's,/usr/local/bin/beidgui.png\b,beidgui,g' \
 	src/eidviewer/beidgui.desktop
-%{__perl} -pi -e 's,/usr/local/bin\b,%{_bindir},g' \
+sed -i -e 's,/usr/local/bin\b,%{_bindir},g' \
 	src/beidservicecrl/belgium.be-beidcrld \
 	"src/Belpic PCSC Service/belgium.be-beidpcscd" \
 	src/eidviewer/beidgui.desktop
-%{__perl} -pi -e 's,/usr/local/share\b,%{_datadir},g' \
+sed -i -e 's,/usr/local/share\b,%{_datadir},g' \
 	src/eidviewer/beidgui.conf
-%{__perl} -pi -e 's,MultipleArgs=false,,g' \
+sed -i -e 's,MultipleArgs=false,,g' \
 	src/eidviewer/beidgui.desktop
 
 %build
-export CFLAGS="%{optflags}"
-export CXXFLAGS="%{optflags}"
 export JAVA_HOME="$(readlink /etc/alternatives/java_sdk)"
 #source "/etc/profile.d/qt.sh"
-scons configure prefix="%{_prefix}"
-scons prefix="%{_prefix}"
+%configure_scons
+%scons
 
 %install
 rm -rf %{buildroot}
+# %scons_install doesn't work here - AdamW 2008/09
 scons install --cache-disable prefix="%{buildroot}%{_prefix}" libdir="%{buildroot}%{_libdir}"
 
 install -Dp -m0755 beidcrld.init %{buildroot}%{_initrddir}/beidcrld
@@ -201,9 +208,9 @@ desktop-file-install --vendor="" \
   --add-category="Security" \
   --dir %{buildroot}%{_datadir}/applications %{buildroot}%{_datadir}/applications/*
 
-%{__perl} -pi -e 's,Reading and Administration,Belgian eID card viewer,g' %{buildroot}%{_datadir}/applications/*
-%{__perl} -pi -e 's,Lezen en Beheren,Belgische eID kaartlezer,g' %{buildroot}%{_datadir}/applications/*
-%{__perl} -pi -e 's,Lire et Gérer,Lecteur de carte eID belge,g' %{buildroot}%{_datadir}/applications/*
+sed -i -e 's,Reading and Administration,Belgian eID card viewer,g' %{buildroot}%{_datadir}/applications/*
+sed -i -e 's,Lezen en Beheren,Belgische eID kaartlezer,g' %{buildroot}%{_datadir}/applications/*
+sed -i -e 's,Lire et Gérer,Lecteur de carte eID belge,g' %{buildroot}%{_datadir}/applications/*
 
 ### Fix library symlinks
 #for lib in $(ls %{buildroot}%{_libdir}/libbeid*.so.?.?.?); do
