@@ -46,7 +46,7 @@ BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pcsc-lite-devel >= 1.2.9
 BuildRequires:	qt3-devel >= 3.3.3
 BuildRequires:	wxGTK2.6-devel
-BuildRequires:	ImageMagick
+BuildRequires:	imagemagick
 BuildRequires:	java-sdk
 BuildRequires:	openssl-devel
 BuildRequires:	desktop-file-utils
