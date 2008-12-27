@@ -13,7 +13,7 @@
 Name:		beid
 Summary:	Application to read information from the Belgian e-ID card
 Version:	2.6.0
-Release:	%{mkrel 1}
+Release:	%{mkrel 2}
 # The original parts are under the "eID Toolkit Software License",
 # which by my reading is BSD-like; it's basically the BSD in stronger
 # legal language with some added gumph about liability etc. It also
@@ -38,6 +38,11 @@ Patch4:		beid-2.6.0-pcsc_soname.patch
 # seem to conflict with ones in SConscript files and break the install
 # process - AdamW 2008/09
 Patch5:		beid-2.6.0-install.patch
+# Fix build / run with wx 2.8. From Gentoo http://bugs.gentoo.org/187422
+# - AdamW 2008/12
+Patch6:		beid-2.6.0-wx28.patch
+# Fix a string literal error - AdamW 2008/12
+Patch7:		beid-2.6.0-literal.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
@@ -45,7 +50,7 @@ BuildRequires:	scons
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pcsc-lite-devel >= 1.2.9
 BuildRequires:	qt3-devel >= 3.3.3
-BuildRequires:	wxGTK2.6-devel
+BuildRequires:	wxgtku-devel
 BuildRequires:	imagemagick
 BuildRequires:	java-sdk
 BuildRequires:	openssl-devel
@@ -144,6 +149,8 @@ This package provides shared libraries to use with the Belgian
 Identity Card runtime and tools.
 
 %prep
+%define _default_patch_fuzz 1
+
 %setup -q
 %setup -q -a 1
 
@@ -153,6 +160,8 @@ Identity Card runtime and tools.
 %patch3 -p1 -b .gcc43
 %patch4 -p1 -b .pcsc
 %patch5 -p1 -b .install
+%patch6 -p1 -b .wx28
+%patch7 -p1 -b .literal
 
 ### Fixing the references to /usr/local in some files
 sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
@@ -183,12 +192,14 @@ sed -i -e 's,MultipleArgs=false,,g' \
 %build
 export JAVA_HOME="$(readlink /etc/alternatives/java_sdk)"
 #source "/etc/profile.d/qt.sh"
+export QTDIR=%{qt3dir}
 %configure_scons
 scons
 
 %install
 rm -rf %{buildroot}
 # %scons_install doesn't work here - AdamW 2008/09
+export QTDIR=%{qt3dir}
 scons install --cache-disable prefix="%{buildroot}%{_prefix}" libdir="%{buildroot}%{_libdir}"
 
 install -Dp -m0755 beidcrld.init %{buildroot}%{_initrddir}/beidcrld
