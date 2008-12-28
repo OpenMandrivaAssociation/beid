@@ -47,6 +47,11 @@ Patch5:		beid-2.6.0-install.patch
 # Fix build / run with wx 2.8. From Gentoo http://bugs.gentoo.org/187422
 # - AdamW 2008/12
 Patch6:		beid-2.6.0-wx28.patch
+# This patch disables the generation of .la files for the libraries:
+# it breaks with scons 1.2.0, and the files are never installed or used
+# anyway. It's called bksys.patch because the code in question actually
+# comes from that late, lamented buildsystem - AdamW 2008/12
+Patch7:		beid-2.6.0-bksys.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
@@ -165,6 +170,7 @@ Identity Card runtime and tools.
 %patch4 -p1 -b .pcsc
 %patch5 -p1 -b .install
 %patch6 -p1 -b .wx28
+%patch7 -p1 -b .bksys
 
 ### Fixing the references to /usr/local in some files
 sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
