@@ -1,3 +1,7 @@
+# FIXME: someone please fix the string literal errors properly -
+# when i try and do it according to the wiki page, the compile gives
+# warnings that look really bad (saying the code will crash on
+# execution) so I'm sure I'm doing it wrong - AdamW 2008/12
 %define Werror_cflags %nil
 
 %define	major		2
