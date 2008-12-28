@@ -1,3 +1,5 @@
+%define Werror_cflags %nil
+
 %define	major		2
 %define libname		%mklibname %{name} %{major}
 %define develname	%mklibname %{name} -d
@@ -41,8 +43,6 @@ Patch5:		beid-2.6.0-install.patch
 # Fix build / run with wx 2.8. From Gentoo http://bugs.gentoo.org/187422
 # - AdamW 2008/12
 Patch6:		beid-2.6.0-wx28.patch
-# Fix a string literal error - AdamW 2008/12
-Patch7:		beid-2.6.0-literal.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
@@ -161,7 +161,6 @@ Identity Card runtime and tools.
 %patch4 -p1 -b .pcsc
 %patch5 -p1 -b .install
 %patch6 -p1 -b .wx28
-%patch7 -p1 -b .literal
 
 ### Fixing the references to /usr/local in some files
 sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
