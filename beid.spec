@@ -19,7 +19,7 @@
 Name:		beid
 Summary:	Application to read information from the Belgian e-ID card
 Version:	2.6.0
-Release:	%{mkrel 2}
+Release:	%{mkrel 3}
 # The original parts are under the "eID Toolkit Software License",
 # which by my reading is BSD-like; it's basically the BSD in stronger
 # legal language with some added gumph about liability etc. It also
@@ -52,6 +52,9 @@ Patch6:		beid-2.6.0-wx28.patch
 # anyway. It's called bksys.patch because the code in question actually
 # comes from that late, lamented buildsystem - AdamW 2008/12
 Patch7:		beid-2.6.0-bksys.patch
+# Debian patch to fix security issue
+Patch8:		beid-2.6.0-CVE-2009-0049.patch
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
@@ -171,6 +174,7 @@ Identity Card runtime and tools.
 %patch5 -p1 -b .install
 %patch6 -p1 -b .wx28
 %patch7 -p1 -b .bksys
+%patch8 -p1 -b .CVE-2009-0049
 
 ### Fixing the references to /usr/local in some files
 sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
