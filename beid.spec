@@ -54,7 +54,7 @@ Patch6:		beid-2.6.0-wx28.patch
 Patch7:		beid-2.6.0-bksys.patch
 # Debian patch to fix security issue
 Patch8:		beid-2.6.0-CVE-2009-0049.patch
-
+Patch9:		beid-2.6.0-gcc44.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
@@ -163,7 +163,6 @@ Identity Card runtime and tools.
 %prep
 %define _default_patch_fuzz 1
 
-%setup -q
 %setup -q -a 1
 
 %patch0 -p0
@@ -175,6 +174,7 @@ Identity Card runtime and tools.
 %patch6 -p1 -b .wx28
 %patch7 -p1 -b .bksys
 %patch8 -p1 -b .CVE-2009-0049
+%patch9 -p0 -b .gcc44
 
 ### Fixing the references to /usr/local in some files
 sed -i -e 's,/usr/local/etc\b,%{buildroot}%{_sysconfdir},g' \
