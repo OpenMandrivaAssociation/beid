@@ -19,7 +19,7 @@
 Name:		beid
 Summary:	Application to read information from the Belgian e-ID card
 Version:	2.6.0
-Release:	%{mkrel 3}
+Release:	%{mkrel 4}
 # The original parts are under the "eID Toolkit Software License",
 # which by my reading is BSD-like; it's basically the BSD in stronger
 # legal language with some added gumph about liability etc. It also
