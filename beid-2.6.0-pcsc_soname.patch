@@ -1,0 +1,11 @@
+--- belpic-2.6.0.orig/src/winscarp/winscarp.cpp
++++ belpic-2.6.0/src/winscarp/winscarp.cpp
+@@ -122,7 +122,7 @@
+     #define SCARDGETSTATUSFUNC "SCardStatusA"
+ #else
+     #define WINAPI
+-    #define PCSCNAME "pcsclite" 
++    #define PCSCNAME "pcsclite.so.1" 
+     #define SCARDCONNECTFUNC "SCardConnect"
+     #define SCARDGETSTATUSCHANGEFUNC "SCardGetStatusChange"
+     #define SCARDLISTREADERSFUNC "SCardListReaders"

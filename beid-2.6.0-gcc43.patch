@@ -1,0 +1,64 @@
+--- belpic-2.6.0.orig/src/beidcommlib/MessageQueue.cpp
++++ belpic-2.6.0/src/beidcommlib/MessageQueue.cpp
+@@ -4,6 +4,7 @@
+ 
+ #include "MessageQueue.h"
+ #include <qwaitcondition.h>
++#include <algorithm>
+ 
+ using namespace std;
+ 
+--- belpic-2.6.0.orig/src/eidlib/OpenSCReader.cpp
++++ belpic-2.6.0/src/eidlib/OpenSCReader.cpp
+@@ -11,6 +11,8 @@
+ #include <opensc/pkcs15.h>
+ #include <string.h>
+ 
++#include <cstdlib>
++
+ 
+ struct pcsc_slot_data {	unsigned long pcsc_card; }; /* comes from reader-pcsc.c */
+ #define GET_SLOT_DATA(r) ((struct pcsc_slot_data *) (r)->drv_data)
+--- belpic-2.6.0.orig/src/eidlib/eiderrors.h
++++ belpic-2.6.0/src/eidlib/eiderrors.h
+@@ -21,6 +21,8 @@
+ #define SCARD_E_NO_ACCESS                       0x80100027
+ #endif
+ 
++#include <cstring>
++
+ typedef struct
+ {
+     int iOpenSC;
+--- belpic-2.6.0.orig/src/beidcommon/TLVBuffer.cpp
++++ belpic-2.6.0/src/beidcommon/TLVBuffer.cpp
+@@ -4,6 +4,9 @@
+ 
+ #include "TLVBuffer.h"
+ 
++#include <cstdlib>
++#include <cstring>
++
+ namespace eidcommon
+ {
+ 
+--- belpic-2.6.0.orig/src/beidcommon/datafile.cpp
++++ belpic-2.6.0/src/beidcommon/datafile.cpp
+@@ -32,6 +32,8 @@
+ //
+ 
+ #include "datafile.h"
++#include <cstdlib>
++#include <climits>
+ #include <ctype.h>
+ #include <stdio.h>
+ #include <stdarg.h>
+@@ -41,6 +43,8 @@
+     #include <windows.h>
+ #endif
+ 
++#include <cstring>
++
+ 
+ // Compatibility Defines ////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////////

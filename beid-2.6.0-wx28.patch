@@ -1,0 +1,121 @@
+--- beid-2.6.0-wx28/SConstruct	2008-12-27 12:49:24.000000000 -0800
++++ beid-2.6.0-wx28/SConstruct.new	2008-12-27 12:50:40.000000000 -0800
+@@ -91,7 +91,7 @@
+         Exit(1)
+ 
+     # check for wx libs
+-    if conf.CheckLib('wx_gtk-2.4') or conf.CheckLib('wx_gtk2u_core-2.6') or conf.CheckLib('wx_gtk2-2.4') or conf.CheckLib('wx_gtk2_core-2.6'):
++    if conf.CheckLib('wx_gtk-2.4') or conf.CheckLib('wx_gtk2u_core-2.6') or conf.CheckLib('wx_gtk2-2.4') or conf.CheckLib('wx_gtk2_core-2.6') or conf.CheckLib('wx_gtk2u_core-2.8') :
+         env['WITHEIDGUI']=1
+ 
+     # check for headers
+--- beid-2.6.0-wx28/src/eidviewer/eidviewerApp.cpp	2008-12-27 12:48:44.000000000 -0800
++++ beid-2.6.0-wx28/src/eidviewer/eidviewerApp.cpp.new	2008-12-27 12:51:51.000000000 -0800
+@@ -796,7 +796,7 @@
+ 
+         wxString strFileName(idData.nationalNumber, wxConvUTF8);
+         strFileName += wxT(".eid");
+-        wxFileDialog oDialog(m_pFrame, _("Save an eID file"), wxT(""), strFileName, wxT("eID files (*.eid)|*.eid"), wxSAVE | wxHIDE_READONLY | wxOVERWRITE_PROMPT);
++        wxFileDialog oDialog(m_pFrame, _("Save an eID file"), wxT(""), strFileName, wxT("eID files (*.eid)|*.eid"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+         if (oDialog.ShowModal() != wxID_OK)
+         {
+             m_pFrame->SetStatusText(wxT(""));
+@@ -864,7 +864,7 @@
+ 
+     if(strFile.IsEmpty())
+     {
+-        wxFileDialog oDialog(m_pFrame, _("Open an eID file"), wxT(""), wxT(""), wxT("eID files (*.eid)|*.eid"), wxOPEN | wxHIDE_READONLY);
++        wxFileDialog oDialog(m_pFrame, _("Open an eID file"), wxT(""), wxT(""), wxT("eID files (*.eid)|*.eid"), wxFD_OPEN);
+         if (oDialog.ShowModal() != wxID_OK)
+         {
+             m_pFrame->SetStatusText(wxT(""));
+--- beid-2.6.0-wx28/src/eidviewer/eidviewerFrame.cpp	2008-12-27 12:53:10.000000000 -0800
++++ beid-2.6.0-wx28/src/eidviewer/eidviewerFrame.cpp.new	2008-12-27 12:52:59.000000000 -0800
+@@ -108,7 +108,7 @@
+        : wxFrame(NULL, -1, title, wxPoint(x, y), wxSize(width, height), wxDEFAULT_FRAME_STYLE)
+ {
+      m_notebook = NULL;
+-     m_sizerNotebook = NULL;
++//     m_sizerNotebook = NULL;
+      m_statusGauge = NULL;
+      m_IDPanel = NULL;
+ 
+@@ -133,7 +133,7 @@
+     SetToolBar(m_tbar);
+     
+     m_notebook = new eidviewerNotebook(this, -1);
+-    m_sizerNotebook = new wxNotebookSizer( m_notebook );
++//    m_sizerNotebook = new wxNotebookSizer( m_notebook );
+     m_IDPanel = m_notebook->CreatePage(IDD_PAGE_IDENTITY);
+     m_notebook->CreatePage(IDD_PAGE_CERTIFICATES);
+     m_notebook->CreatePage(IDD_PAGE_CARDDATA);
+@@ -169,11 +169,11 @@
+ 
+ eidviewerFrame::~eidviewerFrame()
+ {
+-    if(m_sizerNotebook)
+-    {
+-        delete m_sizerNotebook;
+-        m_sizerNotebook = NULL;
+-    }
++//    if(m_sizerNotebook)
++//    {
++//        delete m_sizerNotebook;
++//        m_sizerNotebook = NULL;
++//    }
+ }
+ 
+ void eidviewerFrame::OnQuit (wxCommandEvent & )
+--- beid-2.6.0-wx28/src/eidviewer/eidviewerFrame.h	2008-12-27 12:48:44.000000000 -0800
++++ beid-2.6.0-wx28/src/eidviewer/eidviewerFrame.h.new	2008-12-27 12:53:39.000000000 -0800
+@@ -36,7 +36,7 @@
+ private:
+     eidviewerNotebook *m_notebook;
+     // Sizer for m_notebook
+-    wxNotebookSizer *m_sizerNotebook;
++//    wxNotebookSizer *m_sizerNotebook;
+     wxPanel *m_IDPanel;
+     bool m_bReading;
+ 
+--- beid-2.6.0-wx28/src/eidviewer/eidviewerNotebook.h	2008-12-27 12:48:44.000000000 -0800
++++ beid-2.6.0-wx28/src/eidviewer/eidviewerNotebook.h.new	2008-12-27 12:54:02.000000000 -0800
+@@ -14,7 +14,8 @@
+ #endif
+ 
+ #include "wx/notebook.h"
+-#include "wx/treectrl.h"
++#include "wx/treectrl.h"
++#include "wx/imaglist.h"
+ #include "eidlib.h"
+ #include "PrintOutData.h"
+ #include "Certif.h"
+--- beid-2.6.0-wx28/src/eidviewer/eidviewerNotebook.cpp	2008-12-27 12:48:44.000000000 -0800
++++ beid-2.6.0-wx28/src/eidviewer/eidviewerNotebook.cpp.new	2008-12-27 12:55:33.000000000 -0800
+@@ -18,7 +18,8 @@
+ #include <wx/spinctrl.h>
+ #include <wx/splitter.h>
+ #include <wx/listctrl.h>
+-#include <wx/treectrl.h>
++#include <wx/treectrl.h>
++#include <wx/imaglist.h>
+ #include <wx/notebook.h>
+ #include <wx/grid.h>
+ #include <wx/datetime.h>
+@@ -2280,7 +2281,7 @@
+         return hti;
+     }
+ 
+-    long lCookie = 0;
++    wxTreeItemIdValue lCookie = 0;
+     hti = pCtrlTreeCerts->GetFirstChild( hti, lCookie );	
+     do	
+     {		
+@@ -2343,7 +2344,7 @@
+     {
+         wxBusyCursor wc;
+ 
+-        wxString strFileTmp = wxFileName::CreateTempFileName(wxT("cert"), NULL);
++        wxString strFileTmp = wxFileName::CreateTempFileName(wxT("cert"), (wxFile*)NULL);
+         wxFileName oName(strFileTmp);
+         oName.SetExt(wxT("cer"));
+         wxString strFile;

@@ -1,0 +1,54 @@
+--- src/Belpic PCSC Service/SConscript.link	2010-04-23 04:20:06.000000000 +0200
++++ src/Belpic PCSC Service/SConscript	2010-04-23 04:20:28.000000000 +0200
+@@ -19,7 +19,7 @@
+ """)
+ # if _PRIVACY_REMOTE_SVC defined then acting as remote service instead of a privacy filter
+ #obj.cxxflags='-D_DEBUGLOG'
+-obj.libs='ssl beidlibopensc beidpcsclite beidcomm beidcommon'
++obj.libs='ssl beidpcsclite beidcomm beidcommon'
+ obj.libpaths='../eidlib ../newpkcs11/src/libopensc ../winscarp ../beidcommlib ../beidcommon'
+ obj.includes='../eidlib'
+ obj.execute()
+--- src/beidcommon/SConscript.link	2006-06-27 14:07:51.000000000 +0200
++++ src/beidcommon/SConscript	2010-04-23 04:13:32.000000000 +0200
+@@ -18,6 +18,7 @@
+ TLVBuffer.cpp
+ """)
+ obj.includes='../eidlib'
++obj.libs='ssl crypto'
+ obj.vnum='0.0.0'
+ obj.execute()
+ libdir = env['LIBDIR']
+--- src/beidservicecrl/SConscript.link	2010-04-23 04:20:47.000000000 +0200
++++ src/beidservicecrl/SConscript	2010-04-23 04:21:12.000000000 +0200
+@@ -4,7 +4,7 @@
+ obj.target='beidcrld'
+ obj.includes='../eidlib'
+ obj.libpaths='../eidlib ../newpkcs11/src/libopensc ../winscarp ../beidcommlib ../beidcommon'
+-obj.libs='ssl beid beidlibopensc beidpcsclite beidcomm beidcommon'
++obj.libs='ssl beidcommon'
+ obj.src=Split("""
+ CRLScheduler.cpp  main.cpp
+ """)
+--- src/newpkcs11/src/libopensc/SConscript.link	2010-04-23 04:18:03.000000000 +0200
++++ src/newpkcs11/src/libopensc/SConscript	2010-04-23 04:18:14.000000000 +0200
+@@ -4,7 +4,7 @@
+ myenv.Append(CCFLAGS=' -DHAVE_CONFIG_H')
+ # LIBPATH before LIBS !?
+ myenv.Append(LIBPATH='../../../winscarp')
+-myenv.Append(LIBS=['beidpcsclite', 'crypto', 'ssl'])
++myenv.Append(LIBS=['beidpcsclite', 'crypto'])
+ obj=myenv.genobj('shlib', myenv)
+ obj.src=Split("""
+ asn1.c
+--- src/winscarp/SConscript.link	2006-06-27 14:07:51.000000000 +0200
++++ src/winscarp/SConscript	2010-04-23 04:13:32.000000000 +0200
+@@ -9,7 +9,7 @@
+ #obj.cxxflags='-D_DEBUGLOGTIME -D_DEBUGLOG'
+ obj.includes='../eidlib'
+ obj.vnum='2.7.1'
+-obj.libs='beidcomm beidcommon'
++obj.libs='beidcomm beidcommon ssl'
+ obj.libpaths='../beidcommlib ../beidcommon'
+ obj.execute()
+ libdir = env['LIBDIR']

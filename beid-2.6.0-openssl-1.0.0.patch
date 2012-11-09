@@ -1,0 +1,86 @@
+--- src/eidlib/Verify.cpp.ssl	2006-06-19 16:08:43.000000000 +0200
++++ src/eidlib/Verify.cpp	2010-04-23 04:04:23.000000000 +0200
+@@ -126,7 +126,7 @@
+      }
+   }
+   sk_X509_free(spc_store->certs);
+-  for (i = 0; i < sk_X509_num(spc_store->crls); i++)
++  for (i = 0; i < sk_X509_num((stack_st_X509*)spc_store->crls); i++)
+   {
+      X509_CRL *pX509CRL = sk_X509_CRL_value(spc_store->crls, i);
+      if (pX509CRL != NULL)
+@@ -135,7 +135,7 @@
+          pX509CRL = NULL;
+      }
+   }
+-  sk_X509_free(spc_store->crls);
++  sk_X509_free((stack_st_X509*)spc_store->crls);
+   sk_X509_free(spc_store->use_certs);
+ }
+ 
+@@ -161,7 +161,7 @@
+ {
+     // Check CRL already in store
+     bool bFound = false;
+-    for (int i = 0; i < sk_X509_num(spc_store->crls); i++)
++    for (int i = 0; i < sk_X509_num((stack_st_X509*)spc_store->crls); i++)
+     {
+         X509_CRL *pX509CRL = sk_X509_CRL_value(spc_store->crls, i);
+         if (X509_V_OK == X509_CRL_cmp(pX509CRL, crl))
+@@ -340,11 +340,11 @@
+ char *CVerify::GetExtensionValue(X509 *pCert, int iNID)
+ {
+     int i, j;
+-    struct stack_st *pStack = NULL;
++    struct stack_st_DIST_POINT *pStack = NULL;
+     const char *pData = NULL;
+     BOOL bFound = FALSE;
+ 
+-    pStack = (struct stack_st *) X509_get_ext_d2i(pCert, iNID, NULL, NULL);
++    pStack = (stack_st_DIST_POINT*)X509_get_ext_d2i(pCert, iNID, NULL, NULL);
+ 
+     if(pStack != NULL)
+     {
+@@ -375,9 +375,9 @@
+         }
+         else if(iNID == NID_info_access)
+         {
+-            for(j = 0; j < sk_ACCESS_DESCRIPTION_num(pStack) && !bFound; j++) 
++            for(j = 0; j < sk_ACCESS_DESCRIPTION_num((stack_st_ACCESS_DESCRIPTION*)pStack) && !bFound; j++) 
+             {
+-                ACCESS_DESCRIPTION *pAccess = sk_ACCESS_DESCRIPTION_value(pStack, j);
++                ACCESS_DESCRIPTION *pAccess = sk_ACCESS_DESCRIPTION_value((stack_st_ACCESS_DESCRIPTION*)pStack, j);
+                 if(pAccess != NULL && pAccess->method != NULL && OBJ_obj2nid(pAccess->method) == NID_ad_OCSP)
+                 {
+                     GENERAL_NAME *pName = pAccess->location;
+@@ -388,7 +388,7 @@
+                     }
+                 }
+             }
+-            sk_ACCESS_DESCRIPTION_free(pStack);
++            sk_ACCESS_DESCRIPTION_free((stack_st_ACCESS_DESCRIPTION*)pStack);
+         }
+     }
+ 
+@@ -401,10 +401,10 @@
+ 
+ int CVerify::VerifyCertHostname(X509 *pCert, char *pszHostname)
+ {
+-    struct stack_st *pStack = NULL;
++    struct stack_st_GENERAL_NAME *pStack = NULL;
+     BOOL bFound = FALSE;
+ 
+-    pStack = (struct stack_st *) X509_get_ext_d2i(pCert, NID_subject_alt_name, NULL, NULL);
++    pStack = (stack_st_GENERAL_NAME*)X509_get_ext_d2i(pCert, NID_subject_alt_name, NULL, NULL);
+     if(pStack != NULL)
+     {
+         int i, iLen1, iLen2;
+@@ -1480,7 +1480,7 @@
+     POLICYINFO *pinfo = NULL;
+     BOOL bFound = FALSE;
+ 
+-    pol = (struct stack_st *) X509_get_ext_d2i(pCert, NID_certificate_policies, NULL, NULL);
++    pol = (struct stack_st_POLICYINFO *) X509_get_ext_d2i(pCert, NID_certificate_policies, NULL, NULL);
+ 
+     if(pol != NULL)
+     {

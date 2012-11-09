@@ -1,0 +1,10 @@
+--- belpic-2.5.9.orig/src/newpkcs11/src/libopensc/card-belpic.c
++++ belpic-2.5.9/src/newpkcs11/src/libopensc/card-belpic.c
+@@ -93,6 +93,7 @@
+ 
+ #ifdef HAVE_GUI
+ #include "scgui.h"
++#include <opensc/scdl.h>
+ static void * modgui = NULL;
+ static SCGUI_INIT pGuiInit = NULL;
+ static SCGUI_ENTERPIN pGuiEnterPin = NULL;

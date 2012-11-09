@@ -1,0 +1,11 @@
+--- src/beidservicecrl/CRLScheduler.cpp~	2006-05-17 16:10:57.000000000 +0200
++++ src/beidservicecrl/CRLScheduler.cpp	2009-10-05 10:05:16.000000000 +0200
+@@ -93,7 +93,7 @@
+ 
+     if(pCRLDistribution != NULL && pszCRLStorePath != NULL)
+     {
+-        char *pTemp; 
++        const char *pTemp; 
+         const char *pFile = pCRLDistribution;
+         while(NULL != (pTemp = strstr(pFile, "/")))
+         {

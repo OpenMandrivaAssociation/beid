@@ -1,0 +1,11 @@
+--- SConstruct	2007-07-11 22:19:31.000000000 +0200
++++ SConstruct.new	2007-07-11 22:19:58.000000000 +0200
+@@ -21,7 +21,7 @@
+ env = Environment(tools=['default', 'generic', 'qt'], toolpath=['admin'])
+ env['QT_LIB'] = 'qt-mt'
+ env.Append(ENV = {'HOME': os.environ['HOME']})
+-env.AppendUnique(CCFLAGS='-Dlinux -pipe -DQT_THREAD_SUPPORT -D_REENTRANT')
++env.Append(CCFLAGS='-Dlinux -pipe -DQT_THREAD_SUPPORT -D_REENTRANT')
+ env.AppendUnique(CPPPATH=['/usr/include/PCSC']) # here needed for config step (for debian)
+ 
+ # FIXME not for for 32 bit mandriva !
