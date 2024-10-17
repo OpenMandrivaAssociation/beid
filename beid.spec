@@ -27,7 +27,7 @@ Release:	%{mkrel 4}
 # BSD). - AdamW 2008/09
 License:	BSD-like and BSD and LGPLv2+
 Group:		Communications
-URL:		http://eid.belgium.be/
+URL:		https://eid.belgium.be/
 Source0:	http://eid.belgium.be/nl/binaries/%{name}-%{version}-20070222_tcm147-9848.tgz
 Source1:	beid-scripts.tar.gz
 Patch0:		eid-belgium-2.5.9-reader-pcsc.patch
