@@ -60,6 +60,11 @@ Patch11:	beid-2.6.0-link.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 #Scons doesn't build when eid-belgium is already installed
 BuildConflicts:	beid
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	scons
 BuildRequires:	openssl-devel >= 0.9.7
 BuildRequires:	pcsc-lite-devel >= 1.2.9
